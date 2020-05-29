@@ -1,0 +1,22 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        netbase \
+        nfs-kernel-server\
+	systemctl\
+	sudo\
+	nano
+
+
+RUN adduser --disabled-password --gecos '' ajay
+RUN usermod -aG sudo ajay
+RUN echo '%sudo   ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo 'ajay   ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo '/mnt       *(rw,sync,no_subtree_check,no_root_squash)' >> /etc/exports
+RUN systemctl daemon-reload
+RUN systemctl restart sudo
+
+
+EXPOSE 80 443
+ENTRYPOINT ["bin/bash"]
+
